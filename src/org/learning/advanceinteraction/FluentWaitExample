@@ -1,0 +1,49 @@
+public class FluentWaitExample {
+	
+	public static void main(String[] args) {
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://www.cleartrip.com/");
+		driver.manage().window().maximize();
+		
+		driver.findElement(By.id("FromTag")).clear();
+		driver.findElement(By.id("FromTag")).sendKeys("Delhi");
+		driver.findElement(By.id("FromTag")).sendKeys(Keys.TAB);
+		
+		driver.findElement(By.name("destination")).clear();
+		driver.findElement(By.name("destination")).sendKeys("Hyderabad", Keys.TAB);
+		
+		
+		driver.findElement(By.id("DepartDate")).sendKeys("24/01/2021");
+		driver.findElement(By.id("FromTag")).sendKeys(Keys.ENTER);
+
+		
+		
+		driver.findElement(By.id("SearchBtn")).click();
+		
+		
+		
+		Wait wait = new FluentWait(driver).withTimeout(Duration.ofSeconds(10))
+					.pollingEvery(Duration.ofSeconds(2))
+					.ignoring(NoSuchElementException.class);
+		 
+				
+		WebElement element = (WebElement) wait.until(new Function<WebDriver, WebElement>()
+
+		{
+
+		public WebElement apply(WebDriver driver) {
+
+		return driver.findElement(By.xpath("//div[@class='px-4']/span[2]"));
+
+		}
+
+		});
+		
+		String txt = element.getText();
+		System.out.println(txt);
+		
+
+	}
+
+}
